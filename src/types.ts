@@ -3,6 +3,7 @@ export type Cable = {
   targetId: string;
 };
 export type CableCoordinates = Cable & {
+  elasticity: number;
   sourceCoords: [number, number];
   targetCoords: [number, number];
 };

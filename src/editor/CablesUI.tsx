@@ -17,6 +17,10 @@ export const CablesUI = () => {
   >([]);
 
   const nextAnimationFrameHandler = () => {
+    const baseElasticity = 2;
+    const baseElasticLength = 120;
+    const minElasticity = 1.2;
+    const maxElasticity = 2;
     const cablesuiEl = document.getElementById("cables-ui");
     if (!cablesuiEl) return;
     const cablesuiRect = cablesuiEl?.getBoundingClientRect();
@@ -28,7 +32,18 @@ export const CablesUI = () => {
         if (!el1 || !el2) return null;
         const r1 = el1.getBoundingClientRect();
         const r2 = el2.getBoundingClientRect();
+        const distance = Math.sqrt(
+          Math.pow(r1.x - r2.x, 2) + Math.pow(r1.y - r2.y, 2)
+        );
+        const elasticity = Math.max(
+          minElasticity,
+          Math.min(
+            maxElasticity,
+            baseElasticity / (distance / baseElasticLength)
+          )
+        );
         return {
+          elasticity,
           sourceId: cable.sourceId,
           targetId: cable.targetId,
           sourceCoords: [
@@ -62,6 +77,7 @@ export const CablesUI = () => {
       <svg id="cables-ui" className="svgfilters-editor__cables-ui">
         {cablesCoordinates.map((cablesCoordinate, index) => {
           const {
+            elasticity,
             sourceCoords: source,
             targetCoords: target,
           } = cablesCoordinate;
@@ -85,5 +101,3 @@ export const CablesUI = () => {
     </>
   );
 };
-
-const elasticity = 1.2;
