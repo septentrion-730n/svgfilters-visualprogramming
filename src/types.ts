@@ -8,6 +8,16 @@ export type CableCoordinates = Cable & {
   targetCoords: [number, number];
 };
 
+export type Connector = {
+  brick: Brick;
+  connectorId: string;
+};
+
+export type ConnectorSelection = {
+  in: Connector | null;
+  out: Connector | null;
+};
+
 export type Brick = {
   id: string;
   label?: string;

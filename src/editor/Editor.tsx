@@ -6,6 +6,7 @@ import {
 import { BrickWrapper } from "../bricks/BrickWrapper";
 import { AddBlockButton } from "./AddBlockButton";
 import "./Editor.scss";
+import { ActionsBar } from "./ActionsBar";
 
 export const Editor = () => {
   return (
@@ -27,6 +28,7 @@ export const Editor = () => {
           },
         ]}
       >
+        <ActionsBar />
         <AddBlockButton />
         <CablesUI />
         <Bricks />
