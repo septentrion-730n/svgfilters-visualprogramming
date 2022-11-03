@@ -1,12 +1,11 @@
 import React from "react";
+import { AppHeader } from "./components/AppHeader";
 import { Editor } from "./editor/Editor";
 
 function App() {
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>SVG Filters editor</h1>
-      </header>
+      <AppHeader />
       <main className="app-container">
         <Editor />
       </main>

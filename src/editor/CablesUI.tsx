@@ -72,7 +72,7 @@ export const CablesUI = () => {
   return (
     <>
       <div className="svgfilters-editor__cables-ui__debug">
-        <text>Renders: {renders}</text>
+        Renders: {renders}
       </div>
       <svg id="cables-ui" className="svgfilters-editor__cables-ui">
         {cablesCoordinates.map((cablesCoordinate, index) => {
