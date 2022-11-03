@@ -1,17 +1,26 @@
-import { useEffect, useRef } from "react";
+import * as React from "react";
 
-export const useAnimationFrame = ({
-  nextAnimationFrameHandler,
-  duration = Number.POSITIVE_INFINITY,
-  shouldAnimate = true,
-}: {
-  nextAnimationFrameHandler: (time: number) => void;
+// @see https://layonez.medium.com/performant-animations-with-requestanimationframe-and-react-hooks-99a32c5c9fbf
+// @see https://github.com/layonez/use-request-animation-frame#readme
+
+type Config = {
   duration?: number;
   shouldAnimate?: boolean;
-}) => {
-  const frame = useRef(0);
-  // keep track of when animation is started
-  const firstFrameTime = useRef(performance.now());
+};
+
+/**
+ * @param nextAnimationFrameHandler Function to be called before the browser performs the next repaint. The number of callbacks is usually 60 times per second, but will generally match the display refresh rate in most web browsers.
+ * @param duration Animation duration. If present, affects `progress` value passed to `nextAnimationFrameHandler` (0 < `progress` <=1). Default value: POSITIVE_INFINITY - for infinite animation.
+ * @param shouldAnimate Turn animation on/off. Default value: true - enable animation from the first render
+ *
+ * @description keep your `nextAnimationFrameHandler` as simple and performant as possible with the least amount of dependencies and transformations. It will be called frequently and this can lead to bad UX
+ */
+const useRequestAnimationFrame = (
+  nextAnimationFrameHandler: (progress: number) => void,
+  { duration = Number.POSITIVE_INFINITY, shouldAnimate = true }: Config
+) => {
+  const frame = React.useRef(0);
+  const firstFrameTime = React.useRef(performance.now());
 
   const animate = (now: number) => {
     // calculate at what time fraction we are currently of whole time of animation
@@ -28,8 +37,7 @@ export const useAnimationFrame = ({
     }
   };
 
-  useEffect(() => {
-    console.log(shouldAnimate);
+  React.useEffect(() => {
     if (shouldAnimate) {
       firstFrameTime.current = performance.now();
       frame.current = requestAnimationFrame(animate);
@@ -41,3 +49,5 @@ export const useAnimationFrame = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldAnimate]);
 };
+
+export default useRequestAnimationFrame;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CableCoordinates } from "../types";
-import { useAnimationFrame } from "../utils/useAnimationFrame";
+import useRequestAnimationFrame from "../utils/useAnimationFrame";
 import { useCablesUIContext } from "./CablesUIProvider";
 
 export const CablesUI = () => {
@@ -49,12 +49,10 @@ export const CablesUI = () => {
   useEffect(() => {
     startAnimation();
     setTimeout(() => stopAnimation(), 50);
-  }, [cables, startAnimation, stopAnimation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cables]);
 
-  useAnimationFrame({
-    nextAnimationFrameHandler,
-    shouldAnimate,
-  });
+  useRequestAnimationFrame(nextAnimationFrameHandler, { shouldAnimate });
 
   return (
     <svg id="cables-ui" className="svgfilters-editor__cables-sui">
