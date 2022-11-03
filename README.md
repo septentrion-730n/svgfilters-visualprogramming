@@ -1,8 +1,7 @@
-# Getting Started with Create React App
+# Visual coding SVG Filter editor ==Work in progress==
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-[./screenshot.png]
+![preview](./screenshot.png)
 
 ## Available Scripts
 
