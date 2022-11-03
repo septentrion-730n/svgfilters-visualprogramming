@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CableCoordinates } from "../types";
 import { useAnimationFrame } from "../utils/useAnimationFrame";
 import { useCablesUIContext } from "./CablesUIProvider";
@@ -49,7 +49,7 @@ export const CablesUI = () => {
   useEffect(() => {
     startAnimation();
     setTimeout(() => stopAnimation(), 50);
-  }, [cables]);
+  }, [cables, startAnimation, stopAnimation]);
 
   useAnimationFrame({
     nextAnimationFrameHandler,
