@@ -1,4 +1,4 @@
-svg.svgfilters-editor__cables-sui {
+svg.svgfilters-editor__cables-ui {
   position: absolute;
   z-index: 0;
   top: 0;
@@ -15,6 +15,14 @@ svg.svgfilters-editor__cables-sui {
     stroke-linejoin: round;
     fill: none;
   }
+}
+.svgfilters-editor__cables-ui__debug {
+  position: absolute;
+  z-index: 20;
+  bottom: 20px;
+  left: 20px;
+
+  opacity: 0.5;
 }
 
 .svgfilters-editor__add-block-button {

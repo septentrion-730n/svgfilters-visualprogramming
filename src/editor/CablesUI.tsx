@@ -55,29 +55,34 @@ export const CablesUI = () => {
   useRequestAnimationFrame(nextAnimationFrameHandler, { shouldAnimate });
 
   return (
-    <svg id="cables-ui" className="svgfilters-editor__cables-sui">
-      <text x={20} y={20}>
-        {renders}
-      </text>
-      {cablesCoordinates.map((cablesCoordinate, index) => {
-        const { sourceCoords: source, targetCoords: target } = cablesCoordinate;
-        const startPosition = `M ${source[0]} ${source[1]} `;
-        const firstControlPoint = `C ${source[0]} ${source[1]} `;
-        const secondControlPoint = `${source[0] +
-          0.5 * (target[0] - source[0])} ${elasticity *
-          Math.max(source[1], target[1])} `;
-        const endPosition = ` ${target[0]} ${target[1]} `;
+    <>
+      <div className="svgfilters-editor__cables-ui__debug">
+        <text>Renders: {renders}</text>
+      </div>
+      <svg id="cables-ui" className="svgfilters-editor__cables-ui">
+        {cablesCoordinates.map((cablesCoordinate, index) => {
+          const {
+            sourceCoords: source,
+            targetCoords: target,
+          } = cablesCoordinate;
+          const startPosition = `M ${source[0]} ${source[1]} `;
+          const firstControlPoint = `C ${source[0]} ${source[1]} `;
+          const secondControlPoint = `${source[0] +
+            0.5 * (target[0] - source[0])} ${elasticity *
+            Math.max(source[1], target[1])} `;
+          const endPosition = ` ${target[0]} ${target[1]} `;
 
-        return (
-          <path
-            key={index}
-            d={`${startPosition} ${firstControlPoint} ${secondControlPoint} ${endPosition}`}
-            stroke="black"
-            fill="none"
-          />
-        );
-      })}
-    </svg>
+          return (
+            <path
+              key={index}
+              d={`${startPosition} ${firstControlPoint} ${secondControlPoint} ${endPosition}`}
+              stroke="black"
+              fill="none"
+            />
+          );
+        })}
+      </svg>
+    </>
   );
 };
 
