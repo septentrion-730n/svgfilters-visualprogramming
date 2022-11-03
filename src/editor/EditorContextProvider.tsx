@@ -94,6 +94,7 @@ export const useEditorContext = () => {
 
 export type EditorContextData = {
   cables: Cable[];
+  bricks: Brick[];
   addBrick: (brick: Brick) => void;
   addCable: (cable: Cable) => void;
   removeCable: (cable: Cable) => void;

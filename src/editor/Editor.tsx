@@ -1,5 +1,8 @@
 import { CablesUI } from "./CablesUI";
-import { EditorContextProvider } from "./EditorContextProvider";
+import {
+  EditorContextProvider,
+  useEditorContext,
+} from "./EditorContextProvider";
 import { BrickWrapper } from "../bricks/BrickWrapper";
 import { AddBlockButton } from "./AddBlockButton";
 import "./Editor.scss";
@@ -8,6 +11,11 @@ export const Editor = () => {
   return (
     <div className="svgfilters-editor">
       <EditorContextProvider
+        bricks={[
+          { id: "item1", position: [100, 40] },
+          { id: "item2", position: [450, 40] },
+          { id: "item3", position: [450, 350] },
+        ]}
         cables={[
           {
             sourceId: "item1_3",
@@ -21,10 +29,19 @@ export const Editor = () => {
       >
         <AddBlockButton />
         <CablesUI />
-        <BrickWrapper brick={{ id: "item1", position: [100, 40] }} />
-        <BrickWrapper brick={{ id: "item2", position: [450, 40] }} />
-        <BrickWrapper brick={{ id: "item3", position: [450, 350] }} />
+        <Bricks />
       </EditorContextProvider>
     </div>
+  );
+};
+
+const Bricks = () => {
+  const { bricks } = useEditorContext();
+  return (
+    <>
+      {bricks.map((brick) => (
+        <BrickWrapper key={brick.id} brick={brick} />
+      ))}
+    </>
   );
 };
