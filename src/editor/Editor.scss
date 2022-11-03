@@ -1,0 +1,26 @@
+svg.svgfilters-editor__cables-sui {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  pointer-events: none;
+
+  path {
+    stroke: #666666;
+    stroke-width: 4px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+}
+
+.svgfilters-editor__add-block-button {
+  position: absolute;
+  z-index: 100;
+  top: 1em;
+  left: 1em;
+  transform: translate(1em, 1em);
+}
