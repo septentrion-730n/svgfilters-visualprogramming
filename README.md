@@ -1,5 +1,4 @@
-# Visual coding SVG Filter editor ==Work in progress==
-
+# Visual coding SVG Filter editor [ Work in progress ]
 
 ![preview](./screenshot.png)
 

@@ -1,13 +1,13 @@
 import { CablesUI } from "./CablesUI";
-import { CablesUIContextProvider } from "./CablesUIProvider";
-import { FilterBlock } from "./FilterBlock";
+import { EditorContextProvider } from "./EditorContextProvider";
+import { BrickWrapper } from "../bricks/BrickWrapper";
 import { AddBlockButton } from "./AddBlockButton";
 import "./Editor.scss";
 
 export const Editor = () => {
   return (
     <div className="svgfilters-editor">
-      <CablesUIContextProvider
+      <EditorContextProvider
         cables={[
           {
             sourceId: "item1_3",
@@ -21,10 +21,10 @@ export const Editor = () => {
       >
         <AddBlockButton />
         <CablesUI />
-        <FilterBlock {...{ id: "item1", x: 100, y: 20 }} />
-        <FilterBlock {...{ id: "item2", x: 450, y: 20 }} />
-        <FilterBlock {...{ id: "item3", x: 450, y: 350 }} />
-      </CablesUIContextProvider>
+        <BrickWrapper brick={{ id: "item1", position: [100, 40] }} />
+        <BrickWrapper brick={{ id: "item2", position: [450, 40] }} />
+        <BrickWrapper brick={{ id: "item3", position: [450, 350] }} />
+      </EditorContextProvider>
     </div>
   );
 };

@@ -1,24 +1,27 @@
 import { useDrag } from "@use-gesture/react";
 import { useSpring, animated } from "@react-spring/web";
 
-import "./FilterBlock.scss";
-import { useCablesUIContext } from "./CablesUIProvider";
+import "./BrickWrapper.scss";
+import { useEditorContext } from "../editor/EditorContextProvider";
+import { Brick } from "../types";
 
-export const FilterBlock = (props: FilterBlockProps) => {
-  const { id } = props;
+export const BrickWrapper = (props: BrickWrapperProps) => {
+  const {
+    brick: { id, position },
+  } = props;
 
-  const { startAnimation, stopAnimation } = useCablesUIContext();
+  const { startAnimation, stopAnimation } = useEditorContext();
 
   const [{ x, y }, api] = useSpring(() => ({
-    x: props.x ?? 0,
-    y: props.y ?? 0,
+    x: position[0] ?? 0,
+    y: position[1] ?? 0,
   }));
 
   const bind = useDrag((gesture) => {
     api.start({
       to: {
-        x: (props.x ?? 0) + gesture.offset[0],
-        y: (props.y ?? 0) + gesture.offset[1],
+        x: (position[0] ?? 0) + gesture.offset[0],
+        y: (position[1] ?? 0) + gesture.offset[1],
       },
     });
   });
@@ -31,8 +34,6 @@ export const FilterBlock = (props: FilterBlockProps) => {
       </div>
       <div className="filter-block__input-connectors mod--output">
         <Connector id={`${id}_3`} />
-        <Connector id={`${id}_4`} />
-        <Connector id={`${id}_5`} />
       </div>
       <div
         className="filter-block__drag-anchor"
@@ -40,7 +41,7 @@ export const FilterBlock = (props: FilterBlockProps) => {
         onMouseDown={() => startAnimation()}
         onMouseUp={() => stopAnimation()}
       />
-      <div>Title {id}</div>
+      <h5 className="text-center">{id}</h5>
     </animated.div>
   );
 };
@@ -49,8 +50,6 @@ const Connector = (props: { id: string }) => {
   return <div id={props.id} className="__item no-drag" />;
 };
 
-export type FilterBlockProps = {
-  id: string;
-  x?: number;
-  y?: number;
+export type BrickWrapperProps = {
+  brick: Brick;
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CableCoordinates } from "../types";
 import useRequestAnimationFrame from "../utils/useAnimationFrame";
-import { useCablesUIContext } from "./CablesUIProvider";
+import { useEditorContext } from "./EditorContextProvider";
 
 export const CablesUI = () => {
   const {
@@ -9,7 +9,7 @@ export const CablesUI = () => {
     shouldAnimate,
     startAnimation,
     stopAnimation,
-  } = useCablesUIContext();
+  } = useEditorContext();
 
   const [renders, setRenders] = useState<number>(0);
   const [cablesCoordinates, setCablesCoordinates] = useState<
