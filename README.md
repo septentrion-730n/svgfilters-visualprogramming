@@ -15,3 +15,13 @@ Launches the test runner in the interactive watch mode.
 ### `npm run build`
 
 Builds the app for production to the `build` folder.
+
+## Tasks
+
+- [ ] Add/remove bricks
+  - [ ] lateral panel
+  - [ ] model updates
+- [ ] Select brick
+  - [ ] stage selection
+  - [ ] lateral right panel
+  - [ ] Autoselect created brick
