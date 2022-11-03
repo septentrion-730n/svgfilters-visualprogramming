@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { CableCoordinates } from "../types";
 import { useAnimationFrame } from "../utils/useAnimationFrame";
 import { useCablesUIContext } from "./CablesUIProvider";
 
 export const CablesUI = () => {
-  const { cables, shouldAnimate } = useCablesUIContext();
+  const {
+    cables,
+    shouldAnimate,
+    startAnimation,
+    stopAnimation,
+  } = useCablesUIContext();
 
   const [renders, setRenders] = useState<number>(0);
   const [cablesCoordinates, setCablesCoordinates] = useState<
@@ -40,6 +45,11 @@ export const CablesUI = () => {
     setCablesCoordinates(cablesCoordinates);
     setRenders((renders) => renders + 1);
   };
+
+  useEffect(() => {
+    startAnimation();
+    setTimeout(() => stopAnimation(), 50);
+  }, [cables]);
 
   useAnimationFrame({
     nextAnimationFrameHandler,
