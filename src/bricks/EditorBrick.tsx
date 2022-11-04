@@ -1,16 +1,18 @@
 import { useDrag } from "@use-gesture/react";
 import { useSpring, animated } from "@react-spring/web";
 
-import "./BrickWrapper.scss";
+import "./EditorBrick.scss";
 import { useEditorContext } from "../editor/EditorContextProvider";
 import { Brick } from "../types";
 
 export const BrickWrapper = (props: BrickWrapperProps) => {
   const {
+    brick,
     brick: { id, position },
   } = props;
 
-  const { startAnimation, stopAnimation } = useEditorContext();
+  const { startAnimation, stopAnimation, selectedBrick, setSelectedBrick } =
+    useEditorContext();
 
   const [{ x, y }, api] = useSpring(() => ({
     x: position[0] ?? 0,
@@ -27,19 +29,30 @@ export const BrickWrapper = (props: BrickWrapperProps) => {
   });
 
   return (
-    <animated.div id={id} className="filter-block" style={{ x, y }}>
-      <div className="filter-block__input-connectors">
+    <animated.div
+      id={id}
+      className={`editor-brick ${
+        selectedBrick?.id === id ? "mod--selected" : ""
+      }`}
+      style={{ x, y }}
+      onMouseDown={() => {
+        setSelectedBrick(brick);
+      }}
+    >
+      <div className="__input-connectors">
         <Connector id={`${id}_1`} />
         <Connector id={`${id}_2`} />
       </div>
-      <div className="filter-block__input-connectors mod--output">
+      <div className="__input-connectors mod--output">
         <Connector id={`${id}_3`} />
       </div>
       <div
-        className="filter-block__drag-anchor"
+        className="__drag-anchor"
         {...bind()}
         onMouseDown={() => startAnimation()}
-        onMouseUp={() => stopAnimation()}
+        onMouseUp={() => {
+          setTimeout(() => stopAnimation(), 1000);
+        }}
       />
       <h5 className="text-center">{id}</h5>
     </animated.div>

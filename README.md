@@ -19,9 +19,9 @@ Builds the app for production to the `build` folder.
 ## Tasks
 
 - [ ] Add/remove bricks
-  - [ ] lateral panel
+  - [x] lateral panel
   - [ ] model updates
-- [ ] Select brick
-  - [ ] stage selection
-  - [ ] lateral right panel
+- [x] Select brick
+  - [ ] stage unselection
+  - [x] lateral right panel
   - [ ] Autoselect created brick

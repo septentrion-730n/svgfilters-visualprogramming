@@ -1,6 +1,6 @@
 $button-size: 20px;
 
-.filter-block {
+.editor-brick {
   position: absolute;
   z-index: 10;
   min-width: 200px;
@@ -13,7 +13,31 @@ $button-size: 20px;
   filter: drop-shadow(2px 2px 2px #00000033) drop-shadow(0 0 2px #00000022);
   border-radius: 4px;
 
-  .filter-block__input-connectors {
+  &.mod--selected {
+    filter: drop-shadow(2px 2px 2px #00000033) drop-shadow(0 0 2px #00000022);
+    border: 1px solid #cccccc;
+  }
+
+  .__drag-anchor {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: block;
+    width: 2 * $button-size;
+    height: $button-size;
+
+    background-color: white;
+    border: 3px solid #666666;
+    border-radius: $button-size;
+
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+
+  .__input-connectors {
     position: absolute;
     top: 0;
     left: 0;
@@ -42,23 +66,4 @@ $button-size: 20px;
       border-color: rgb(176, 74, 26);
     }
   }
-}
-
-.filter-block__drag-anchor {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  display: block;
-  width: 2 * $button-size;
-  height: $button-size;
-
-  background-color: white;
-  border: 3px solid #666666;
-  border-radius: $button-size;
-
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
 }
