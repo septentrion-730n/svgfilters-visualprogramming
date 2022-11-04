@@ -1,14 +1,13 @@
-import Nav from "react-bootstrap/Nav";
+import { Button, ButtonGroup } from "react-bootstrap";
+import { useEditorContext } from "./EditorContextProvider";
 
 export const ActionsBar = () => {
+  const { setShowCompositionPanel } = useEditorContext();
   return (
-    <Nav variant="pills" defaultActiveKey="/home">
-      <Nav.Item>
-        <Nav.Link href="/home">Add brick</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link disabled>Export</Nav.Link>
-      </Nav.Item>
-    </Nav>
+    <ButtonGroup size="sm" className="p-2">
+      <Button variant="secondary" onClick={() => setShowCompositionPanel(true)}>
+        Add group
+      </Button>
+    </ButtonGroup>
   );
 };

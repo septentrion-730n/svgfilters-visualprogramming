@@ -4,9 +4,9 @@ import {
   useEditorContext,
 } from "./EditorContextProvider";
 import { BrickWrapper } from "../bricks/BrickWrapper";
-import { AddBlockButton } from "./AddBlockButton";
 import "./Editor.scss";
 import { ActionsBar } from "./ActionsBar";
+import { CompositionPanel } from "./CompositionPanel";
 
 export const Editor = () => {
   return (
@@ -29,7 +29,7 @@ export const Editor = () => {
         ]}
       >
         <ActionsBar />
-        <AddBlockButton />
+        <CompositionPanel />
         <CablesUI />
         <Bricks />
       </EditorContextProvider>
