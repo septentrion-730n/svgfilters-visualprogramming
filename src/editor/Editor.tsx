@@ -15,30 +15,33 @@ export const Editor = () => {
     <div className="svgfilters-editor">
       <EditorContextProvider
         bricks={[
-          { id: "item1", position: [100, 40], label: "test" },
-          { id: "item2", position: [450, 40] },
-          { id: "item3", position: [450, 350] },
+          {
+            id: "item1",
+            position: [50, 50],
+            label: "test",
+            brickType: "source",
+          },
+          { id: "item2", position: [50, 250], brickType: "source" },
+          { id: "item3", position: [350, 50], brickType: "feFlood" },
+          { id: "item4", position: [350, 250], brickType: "feBlend" },
+          { id: "item5", position: [650, 125], brickType: "feBlend" },
         ]}
         connections={[
           {
-            out: { brickId: "item1", connectorId: "out1" },
-            in: { brickId: "item2", connectorId: "in1" },
+            out: { brickId: "item1", connectorId: "out" },
+            in: { brickId: "item4", connectorId: "in1" },
           },
           {
-            out: { brickId: "item1", connectorId: "out1" },
-            in: { brickId: "item3", connectorId: "in1" },
+            out: { brickId: "item2", connectorId: "out" },
+            in: { brickId: "item4", connectorId: "in2" },
           },
           {
-            out: { brickId: "item2", connectorId: "out1" },
-            in: { brickId: "item1", connectorId: "in1" },
+            out: { brickId: "item4", connectorId: "out" },
+            in: { brickId: "item5", connectorId: "in1" },
           },
           {
-            out: { brickId: "item3", connectorId: "out1" },
-            in: { brickId: "item2", connectorId: "in2" },
-          },
-          {
-            out: { brickId: "item2", connectorId: "out1" },
-            in: { brickId: "item3", connectorId: "in2" },
+            out: { brickId: "item3", connectorId: "out" },
+            in: { brickId: "item5", connectorId: "in2" },
           },
         ]}
       >

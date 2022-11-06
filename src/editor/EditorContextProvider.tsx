@@ -69,6 +69,15 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
     [connectionSelection]
   );
 
+  const composedSetSelectedBrick = useCallback(
+    (brick: BrickData | null) => {
+      if (selectedBrick && brick && brick.id === selectedBrick?.id) return;
+      setSelectedBrick(brick);
+      setShowEditionPanel(!!brick);
+    },
+    [setSelectedBrick]
+  );
+
   const contextValues = useMemo(() => {
     return {
       connections: connections,
@@ -78,7 +87,7 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
       addBrick,
       removeBrick,
       selectedBrick,
-      setSelectedBrick,
+      setSelectedBrick: composedSetSelectedBrick,
       connectionSelection,
       updateConnectionSelection: removeConnectionSelection,
       setShowEditionPanel,

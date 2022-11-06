@@ -2,7 +2,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import { useEditorContext } from "./EditorContextProvider";
 
 export const EditionPanel = () => {
-  const { showEditionPanel, setShowEditionPanel, selectedBrick } =
+  const { selectedBrick, showEditionPanel, setShowEditionPanel } =
     useEditorContext();
 
   if (!selectedBrick) return null;
@@ -12,7 +12,7 @@ export const EditionPanel = () => {
       placement="end"
       scroll={true}
       backdrop={false}
-      show={showEditionPanel}
+      show={selectedBrick && showEditionPanel}
       onHide={() => setShowEditionPanel(false)}
     >
       <Offcanvas.Header closeButton>
