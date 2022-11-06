@@ -1,36 +1,31 @@
-export type Cable = {
-  sourceId: string;
-  targetId: string;
-};
-export type CableCoordinates = Cable & {
-  elasticity: number;
-  sourceCoords: [number, number];
-  targetCoords: [number, number];
-};
-
-export type Connector = {
-  brick: Brick;
+export type ConnectorData = {
+  brickId: string;
   connectorId: string;
 };
 
-export type ConnectorSelection = {
-  in: Connector | null;
-  out: Connector | null;
+export type ConnectionData = {
+  in: ConnectorData;
+  out: ConnectorData;
 };
 
-export type Brick = {
+export type ConnectionSelectionData = {
+  in: ConnectorData | null;
+  out: ConnectorData | null;
+};
+
+export type BrickData = {
   id: string;
   label?: string;
   position: [number, number];
   brickType?: "source" | "feBlend" | "feFlood";
 };
 
-export type BrickSource = Brick & {
+export type BrickSourceData = BrickData & {
   brickType: "source";
   type: "text" | "photo" | "illustration";
 };
 
-export type BrickFeBlend = Brick & {
+export type BrickFeBlendData = BrickData & {
   brickType: "feBlend";
   mode: BlendMode;
   x: number;
@@ -40,7 +35,7 @@ export type BrickFeBlend = Brick & {
   in: [string, string];
 };
 
-export type BrickFeFlood = Brick & {
+export type BrickFeFloodData = BrickData & {
   brickType: "feFlood";
   color: string;
   opacity: number;
@@ -67,3 +62,7 @@ export type BlendMode =
   | "saturation"
   | "color"
   | "luminosity";
+
+export const connectorDataGetId = (connectorData: ConnectorData) => {
+  return `${connectorData.brickId}_${connectorData.connectorId}`;
+};

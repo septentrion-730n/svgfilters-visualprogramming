@@ -1,0 +1,39 @@
+.connections-drawer {
+  .connections-drawer__debug {
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+    opacity: 0.5;
+  }
+
+  & > svg.connections-drawer__paper {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    pointer-events: none;
+
+    path.__connection {
+      position: relative;
+      pointer-events: painted;
+      stroke: #cccccc;
+      stroke-width: 4px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      transition: stroke 0.2s ease-in-out;
+
+      &:hover {
+        stroke: #aaaaaa;
+        z-index: 10;
+      }
+    }
+
+    circle.__anchor {
+      fill: rgba(red, 0.2);
+    }
+  }
+}

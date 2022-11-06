@@ -1,38 +1,51 @@
-import { CablesUI } from "./CablesUI";
+import { ConnectionsDrawer } from "./ConnectionsDrawer";
 import {
   EditorContextProvider,
   useEditorContext,
 } from "./EditorContextProvider";
-import { BrickWrapper } from "../bricks/EditorBrick";
-import "./Editor.scss";
+import { Brick } from "../bricks/Brick";
 import { ActionsBar } from "./ActionsBar";
 import { CompositionPanel } from "./CompositionPanel";
 import { EditionPanel } from "./EditionPanel";
+
+import "./Editor.scss";
 
 export const Editor = () => {
   return (
     <div className="svgfilters-editor">
       <EditorContextProvider
         bricks={[
-          { id: "item1", position: [100, 40] },
+          { id: "item1", position: [100, 40], label: "test" },
           { id: "item2", position: [450, 40] },
           { id: "item3", position: [450, 350] },
         ]}
-        cables={[
+        connections={[
           {
-            sourceId: "item1_3",
-            targetId: "item2_1",
+            out: { brickId: "item1", connectorId: "out1" },
+            in: { brickId: "item2", connectorId: "in1" },
           },
           {
-            sourceId: "item1_3",
-            targetId: "item3_1",
+            out: { brickId: "item1", connectorId: "out1" },
+            in: { brickId: "item3", connectorId: "in1" },
+          },
+          {
+            out: { brickId: "item2", connectorId: "out1" },
+            in: { brickId: "item1", connectorId: "in1" },
+          },
+          {
+            out: { brickId: "item3", connectorId: "out1" },
+            in: { brickId: "item2", connectorId: "in2" },
+          },
+          {
+            out: { brickId: "item2", connectorId: "out1" },
+            in: { brickId: "item3", connectorId: "in2" },
           },
         ]}
       >
         <ActionsBar />
         <CompositionPanel />
         <EditionPanel />
-        <CablesUI />
+        <ConnectionsDrawer />
         <Bricks />
       </EditorContextProvider>
     </div>
@@ -44,7 +57,7 @@ const Bricks = () => {
   return (
     <>
       {bricks.map((brick) => (
-        <BrickWrapper key={brick.id} brick={brick} />
+        <Brick key={brick.id} brick={brick} />
       ))}
     </>
   );

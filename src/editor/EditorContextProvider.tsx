@@ -6,31 +6,32 @@ import {
   useState,
 } from "react";
 import type { ReactNode } from "react";
-import { Brick, Cable, ConnectorSelection } from "../types";
+import { BrickData, ConnectionData, ConnectionSelectionData } from "../types";
 
 const EditorContext = createContext<EditorContextData | null>(null);
 
 export const EditorContextProvider = (props: EditorContextProviderProps) => {
-  const [cables, setCables] = useState<Cable[]>(props.cables ?? []);
-  const [bricks, setBricks] = useState<Brick[]>(props.bricks ?? []);
-  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const [connections, setConnections] = useState<ConnectionData[]>(
+    props.connections ?? []
+  );
+  const [bricks, setBricks] = useState<BrickData[]>(props.bricks ?? []);
 
   const [showCompositionPanel, setShowCompositionPanel] =
     useState<boolean>(false);
   const [showEditionPanel, setShowEditionPanel] = useState<boolean>(false);
-  const [selectedBrick, setSelectedBrick] = useState<Brick | null>(null);
-  const [connectorSelection, setConnectorSelection] =
-    useState<ConnectorSelection>({ in: null, out: null });
+  const [selectedBrick, setSelectedBrick] = useState<BrickData | null>(null);
+  const [connectionSelection, setConnectionSelection] =
+    useState<ConnectionSelectionData>({ in: null, out: null });
 
   const addBrick = useCallback(
-    (brick: Brick) => {
+    (brick: BrickData) => {
       setBricks([...bricks, brick]);
     },
     [bricks, setBricks]
   );
 
   const removeBrick = useCallback(
-    (brick: Brick) => {
+    (brick: BrickData) => {
       const index = findBrickIndex(bricks, brick);
       if (index === -1)
         setBricks([...bricks.slice(0, index), ...bricks.slice(index + 1)]);
@@ -38,66 +39,65 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
     [bricks, setBricks]
   );
 
-  const addCable = useCallback(
-    (cable: Cable) => {
-      const index = findCableIndex(cables, cable);
-      if (index === -1) setCables([...cables, cable]);
+  const addConnection = useCallback(
+    (connection: ConnectionData) => {
+      const index = findConnectionIndex(connections, connection);
+      if (index === -1) setConnections([...connections, connection]);
     },
-    [cables, setCables]
+    [connections, setConnections]
   );
 
-  const removeCable = useCallback(
-    (cable: Cable) => {
-      const index = findCableIndex(cables, cable);
+  const removeConnection = useCallback(
+    (connection: ConnectionData) => {
+      const index = findConnectionIndex(connections, connection);
       if (index === -1)
-        setCables([...cables.slice(0, index), ...cables.slice(index + 1)]);
+        setConnections([
+          ...connections.slice(0, index),
+          ...connections.slice(index + 1),
+        ]);
     },
-    [cables, setCables]
+    [connections, setConnections]
   );
 
-  const updateConnectorSelection = useCallback(
-    (connectorSelectionUpdates: Partial<ConnectorSelection>) => {
-      setConnectorSelection({
-        ...connectorSelection,
-        ...connectorSelectionUpdates,
+  const removeConnectionSelection = useCallback(
+    (connectionSelectionUpdates: Partial<ConnectionSelectionData>) => {
+      setConnectionSelection({
+        ...connectionSelection,
+        ...connectionSelectionUpdates,
       });
     },
-    [connectorSelection]
+    [connectionSelection]
   );
 
   const contextValues = useMemo(() => {
     return {
-      cables,
-      addCable,
-      removeCable,
+      connections: connections,
+      addConnection: addConnection,
+      removeConnection: removeConnection,
       bricks,
       addBrick,
       removeBrick,
       selectedBrick,
       setSelectedBrick,
-      connectorSelection,
-      updateConnectorSelection,
+      connectionSelection,
+      updateConnectionSelection: removeConnectionSelection,
       setShowEditionPanel,
       showEditionPanel,
       showCompositionPanel,
       setShowCompositionPanel,
-      shouldAnimate,
-      startAnimation: () => setShouldAnimate(true),
-      stopAnimation: () => setShouldAnimate(false),
     };
   }, [
-    cables,
-    addCable,
-    removeCable,
+    connections,
+    addConnection,
+    removeConnection,
     bricks,
     addBrick,
     removeBrick,
     selectedBrick,
-    connectorSelection,
-    updateConnectorSelection,
+    connectionSelection,
+    removeConnectionSelection,
     showEditionPanel,
     showCompositionPanel,
-    shouldAnimate,
   ]);
 
   return (
@@ -108,21 +108,21 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
 };
 
 export type EditorContextData = {
-  // cables
-  cables: Cable[];
-  addCable: (cable: Cable) => void;
-  removeCable: (cable: Cable) => void;
+  // connections
+  connections: ConnectionData[];
+  addConnection: (connection: ConnectionData) => void;
+  removeConnection: (connection: ConnectionData) => void;
   // bricks
-  bricks: Brick[];
-  addBrick: (brick: Brick) => void;
-  removeBrick: (brick: Brick) => void;
+  bricks: BrickData[];
+  addBrick: (brick: BrickData) => void;
+  removeBrick: (brick: BrickData) => void;
   // selectedBrick
-  selectedBrick: Brick | null;
-  setSelectedBrick: (brick: Brick | null) => void;
-  // connectorSelection
-  connectorSelection: ConnectorSelection;
-  updateConnectorSelection: (
-    connectionSelectionUpdates: Partial<ConnectorSelection>
+  selectedBrick: BrickData | null;
+  setSelectedBrick: (brick: BrickData | null) => void;
+  // connectionSelection
+  connectionSelection: ConnectionSelectionData;
+  updateConnectionSelection: (
+    connectionSelectionUpdates: Partial<ConnectionSelectionData>
   ) => void;
   // editionPanel
   showEditionPanel: boolean;
@@ -130,15 +130,11 @@ export type EditorContextData = {
   //compositionPanel
   showCompositionPanel: boolean;
   setShowCompositionPanel: (status: boolean) => void;
-  // animation
-  shouldAnimate: boolean;
-  startAnimation: () => void;
-  stopAnimation: () => void;
 };
 
 export type EditorContextProviderProps = {
-  cables?: Cable[];
-  bricks?: Brick[];
+  connections?: ConnectionData[];
+  bricks?: BrickData[];
   children: ReactNode;
 };
 
@@ -151,12 +147,15 @@ export const useEditorContext = () => {
   return context;
 };
 
-export const findCableIndex = (cables: Cable[], needleCable: Cable) =>
-  cables.findIndex(
-    (cable) =>
-      cable.sourceId === needleCable.sourceId &&
-      cable.targetId === needleCable.targetId
+export const findConnectionIndex = (
+  connections: ConnectionData[],
+  needleConnection: ConnectionData
+) =>
+  connections.findIndex(
+    (connection) =>
+      connection.in.brickId === needleConnection.in.brickId &&
+      connection.out.brickId === needleConnection.out.brickId
   );
 
-export const findBrickIndex = (bricks: Brick[], needleBrick: Brick) =>
+export const findBrickIndex = (bricks: BrickData[], needleBrick: BrickData) =>
   bricks.findIndex((brick) => brick.id === needleBrick.id);
