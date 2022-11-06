@@ -3,12 +3,17 @@ import { useSpring, animated } from "@react-spring/web";
 
 import "./Brick.scss";
 import { useEditorContext } from "../editor/EditorContextProvider";
-import { BrickData, ConnectorData, connectorDataGetId } from "../types";
+import {
+  BrickData,
+  BricksTypesConfig,
+  ConnectorData,
+  connectorDataGetId,
+} from "../types";
 
 export const Brick = (props: BrickProps) => {
   const {
     brick,
-    brick: { id, position, label },
+    brick: { id, position, label, brickType },
   } = props;
 
   const { selectedBrick, setSelectedBrick } = useEditorContext();
@@ -40,14 +45,18 @@ export const Brick = (props: BrickProps) => {
       }}
     >
       <div className="__input-connectors">
-        <Connector data={{ brickId: id, connectorId: "in1" }} />
-        <Connector data={{ brickId: id, connectorId: "in2" }} />
+        {BricksTypesConfig[brickType].in.map((connectorId) => (
+          <Connector data={{ brickId: id, connectorId }} />
+        ))}
       </div>
       <div className="__input-connectors mod--output">
-        <Connector data={{ brickId: id, connectorId: "out1" }} />
+        <Connector data={{ brickId: id, connectorId: "out" }} />
       </div>
       <div className="__drag-anchor" {...bind()} />
-      <h5 className="text-center">{label ?? id}</h5>
+      <h5>
+        {BricksTypesConfig[brickType].icon({ size: 34 })} {label ?? id}
+      </h5>
+      <div className="__preview"></div>
     </animated.div>
   );
 };

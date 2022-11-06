@@ -1,3 +1,6 @@
+import { IconType } from "react-icons";
+import { BsPalette, BsPinMapFill, BsOctagonHalf } from "react-icons/bs";
+
 export type ConnectorData = {
   brickId: string;
   connectorId: string;
@@ -12,17 +15,38 @@ export type ConnectionSelectionData = {
   in: ConnectorData | null;
   out: ConnectorData | null;
 };
+export type BrickType = "source" | "feBlend" | "feFlood";
 
+export type BrickTypeConfig = {
+  in: string[];
+  icon: IconType;
+};
+
+// https://react-icons.github.io/react-icons/icons?name=bs
+export const BricksTypesConfig: Record<BrickType, BrickTypeConfig> = {
+  source: {
+    in: [],
+    icon: BsPinMapFill,
+  },
+  feBlend: {
+    in: ["in1", "in2"],
+    icon: BsOctagonHalf,
+  },
+  feFlood: {
+    in: [],
+    icon: BsPalette,
+  },
+};
 export type BrickData = {
   id: string;
   label?: string;
   position: [number, number];
-  brickType?: "source" | "feBlend" | "feFlood";
+  brickType: BrickType;
 };
 
 export type BrickSourceData = BrickData & {
   brickType: "source";
-  type: "text" | "photo" | "illustration";
+  type: "text" | "photo" | "illustration" | "mixed" | "video";
 };
 
 export type BrickFeBlendData = BrickData & {
