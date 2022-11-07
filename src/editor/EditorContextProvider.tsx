@@ -6,32 +6,55 @@ import {
   useState,
 } from "react";
 import type { ReactNode } from "react";
-import { BrickData, ConnectionData, ConnectionSelectionData } from "../types";
+import {
+  BrickData,
+  BrickTypes,
+  ConnectionData,
+  ConnectionSelectionData,
+} from "../model";
 
 const EditorContext = createContext<EditorContextData | null>(null);
 
 export const EditorContextProvider = (props: EditorContextProviderProps) => {
-  const [connections, setConnections] = useState<ConnectionData[]>(
-    props.connections ?? []
+  const [bricks, setBricks] = useState<BrickData<BrickTypes>[]>(
+    props.bricks ?? []
   );
-  const [bricks, setBricks] = useState<BrickData[]>(props.bricks ?? []);
+
+  const updateConnectionsFromBricks = useCallback(() => {
+    return bricks.flatMap((brick) => {
+      return brick.outputsTo.map((outputTo) => ({
+        output: {
+          brickId: brick.id,
+          connectorId: "out",
+        },
+        input: outputTo,
+      }));
+    });
+  }, [bricks]);
+
+  console.log(updateConnectionsFromBricks());
+
+  const [connections, setConnections] = useState<ConnectionData[]>(
+    updateConnectionsFromBricks()
+  );
 
   const [showCompositionPanel, setShowCompositionPanel] =
     useState<boolean>(false);
   const [showEditionPanel, setShowEditionPanel] = useState<boolean>(false);
-  const [selectedBrick, setSelectedBrick] = useState<BrickData | null>(null);
+  const [selectedBrick, setSelectedBrick] =
+    useState<BrickData<BrickTypes> | null>(null);
   const [connectionSelection, setConnectionSelection] =
-    useState<ConnectionSelectionData>({ in: null, out: null });
+    useState<ConnectionSelectionData>({ input: null, output: null });
 
   const addBrick = useCallback(
-    (brick: BrickData) => {
+    (brick: BrickData<BrickTypes>) => {
       setBricks([...bricks, brick]);
     },
     [bricks, setBricks]
   );
 
   const removeBrick = useCallback(
-    (brick: BrickData) => {
+    (brick: BrickData<BrickTypes>) => {
       const index = findBrickIndex(bricks, brick);
       if (index === -1)
         setBricks([...bricks.slice(0, index), ...bricks.slice(index + 1)]);
@@ -41,25 +64,21 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
 
   const addConnection = useCallback(
     (connection: ConnectionData) => {
-      const index = findConnectionIndex(connections, connection);
-      if (index === -1) setConnections([...connections, connection]);
+      // todo: update  bricks, regenerate connections
+      setConnections(updateConnectionsFromBricks());
     },
-    [connections, setConnections]
+    [updateConnectionsFromBricks]
   );
 
   const removeConnection = useCallback(
     (connection: ConnectionData) => {
-      const index = findConnectionIndex(connections, connection);
-      if (index === -1)
-        setConnections([
-          ...connections.slice(0, index),
-          ...connections.slice(index + 1),
-        ]);
+      // todo: update  bricks, regenerate connections
+      setConnections(updateConnectionsFromBricks());
     },
-    [connections, setConnections]
+    [updateConnectionsFromBricks]
   );
 
-  const removeConnectionSelection = useCallback(
+  const updateConnectionSelection = useCallback(
     (connectionSelectionUpdates: Partial<ConnectionSelectionData>) => {
       setConnectionSelection({
         ...connectionSelection,
@@ -70,12 +89,12 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
   );
 
   const composedSetSelectedBrick = useCallback(
-    (brick: BrickData | null) => {
+    (brick: BrickData<BrickTypes> | null) => {
       if (selectedBrick && brick && brick.id === selectedBrick?.id) return;
       setSelectedBrick(brick);
       setShowEditionPanel(!!brick);
     },
-    [setSelectedBrick]
+    [setSelectedBrick, setShowEditionPanel, selectedBrick]
   );
 
   const contextValues = useMemo(() => {
@@ -89,7 +108,7 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
       selectedBrick,
       setSelectedBrick: composedSetSelectedBrick,
       connectionSelection,
-      updateConnectionSelection: removeConnectionSelection,
+      updateConnectionSelection,
       setShowEditionPanel,
       showEditionPanel,
       showCompositionPanel,
@@ -103,8 +122,9 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
     addBrick,
     removeBrick,
     selectedBrick,
+    composedSetSelectedBrick,
     connectionSelection,
-    removeConnectionSelection,
+    updateConnectionSelection,
     showEditionPanel,
     showCompositionPanel,
   ]);
@@ -122,12 +142,12 @@ export type EditorContextData = {
   addConnection: (connection: ConnectionData) => void;
   removeConnection: (connection: ConnectionData) => void;
   // bricks
-  bricks: BrickData[];
-  addBrick: (brick: BrickData) => void;
-  removeBrick: (brick: BrickData) => void;
+  bricks: BrickData<BrickTypes>[];
+  addBrick: (brick: BrickData<BrickTypes>) => void;
+  removeBrick: (brick: BrickData<BrickTypes>) => void;
   // selectedBrick
-  selectedBrick: BrickData | null;
-  setSelectedBrick: (brick: BrickData | null) => void;
+  selectedBrick: BrickData<BrickTypes> | null;
+  setSelectedBrick: (brick: BrickData<BrickTypes> | null) => void;
   // connectionSelection
   connectionSelection: ConnectionSelectionData;
   updateConnectionSelection: (
@@ -142,8 +162,7 @@ export type EditorContextData = {
 };
 
 export type EditorContextProviderProps = {
-  connections?: ConnectionData[];
-  bricks?: BrickData[];
+  bricks?: BrickData<BrickTypes>[];
   children: ReactNode;
 };
 
@@ -162,9 +181,11 @@ export const findConnectionIndex = (
 ) =>
   connections.findIndex(
     (connection) =>
-      connection.in.brickId === needleConnection.in.brickId &&
-      connection.out.brickId === needleConnection.out.brickId
+      connection.input.brickId === needleConnection.input.brickId &&
+      connection.output.brickId === needleConnection.output.brickId
   );
 
-export const findBrickIndex = (bricks: BrickData[], needleBrick: BrickData) =>
-  bricks.findIndex((brick) => brick.id === needleBrick.id);
+export const findBrickIndex = (
+  bricks: BrickData<BrickTypes>[],
+  needleBrick: BrickData<BrickTypes>
+) => bricks.findIndex((brick) => brick.id === needleBrick.id);

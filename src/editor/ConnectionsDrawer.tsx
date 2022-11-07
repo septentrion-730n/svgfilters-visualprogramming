@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ConnectionData, connectorDataGetId } from "../types";
+import { ConnectionData, connectorDataGetDOMId } from "../model";
 import useRequestAnimationFrame from "../utils/useRequestAnimationFrame";
 import { useEditorContext } from "./EditorContextProvider";
 
@@ -17,8 +17,12 @@ export const ConnectionsDrawer = () => {
   const connectionsCordinates = connections.map(
     (connection: ConnectionData) => {
       const containerEl = document.getElementById("connections-drawer__paper");
-      const inEl = document.getElementById(connectorDataGetId(connection.in));
-      const outEl = document.getElementById(connectorDataGetId(connection.out));
+      const inEl = document.getElementById(
+        connectorDataGetDOMId(connection.input)
+      );
+      const outEl = document.getElementById(
+        connectorDataGetDOMId(connection.output)
+      );
       if (!containerEl || !inEl || !outEl) return null;
 
       const containerRect = containerEl.getBoundingClientRect();
@@ -70,28 +74,39 @@ export const ConnectionsDrawer = () => {
     }
   );
 
+  let counter = 0;
+
   return (
-    <div className="connections-drawer">
-      <div className="connections-drawer__debug">{renderings}</div>
-      <svg id="connections-drawer__paper" className="connections-drawer__paper">
+    <div key={`svgdds_${++counter}`} className="connections-drawer">
+      <div
+        key={`svgdsdsdsds_${++counter}`}
+        className="connections-drawer__debug"
+      >
+        {renderings}
+      </div>
+      <svg
+        key={`svg_${++counter}`}
+        id="connections-drawer__paper"
+        className="connections-drawer__paper"
+      >
         {connectionsCordinates.map((connectionCordinates, index) => {
           if (!connectionCordinates) return null;
           const { anchorCoords, inCoords, outCoords } = connectionCordinates;
           return (
-            <>
+            <g key={`group_${index}`}>
               <path
                 key={`connection_${index}`}
                 className="__connection"
                 d={`M ${inCoords[0]} ${inCoords[1]} C ${inCoords[0]} ${inCoords[1]} ${anchorCoords[0]} ${anchorCoords[1]} ${outCoords[0]} ${outCoords[1]}`}
               />
               <circle
-                key={`anchor_${index}`}
+                key={`anchor_${index}_${++counter}`}
                 className="__anchor"
                 cx={anchorCoords[0]}
                 cy={anchorCoords[1]}
                 r={4}
               />
-            </>
+            </g>
           );
         })}
       </svg>

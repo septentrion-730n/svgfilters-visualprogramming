@@ -5,15 +5,16 @@ import "./Brick.scss";
 import { useEditorContext } from "../editor/EditorContextProvider";
 import {
   BrickData,
-  BricksTypesConfig,
+  BrickTypes,
+  brickTypesDescriptions,
   ConnectorData,
-  connectorDataGetId,
-} from "../types";
+  connectorDataGetDOMId,
+} from "../model";
 
 export const Brick = (props: BrickProps) => {
   const {
     brick,
-    brick: { id, position, label, brickType },
+    brick: { id, position, label, type },
   } = props;
 
   const { selectedBrick, setSelectedBrick } = useEditorContext();
@@ -41,28 +42,32 @@ export const Brick = (props: BrickProps) => {
       }`}
       style={{ x, y }}
       onMouseDown={() => {
-        setSelectedBrick(brick);
+        setSelectedBrick(brick as BrickData<BrickTypes>);
       }}
     >
-      <div className="__input-connectors">
-        {BricksTypesConfig[brickType].in.map((connectorId) => (
-          <Connector data={{ brickId: id, connectorId }} />
+      <div key="input-connectors-in" className="__input-connectors">
+        {brickTypesDescriptions[type].inputs.map((connectorId) => (
+          <Connector key={connectorId} data={{ brickId: id, connectorId }} />
         ))}
       </div>
-      <div className="__input-connectors mod--output">
+      <div
+        key="input-connectors-out"
+        className="__input-connectors mod--output"
+      >
         <Connector data={{ brickId: id, connectorId: "out" }} />
       </div>
-      <div className="__drag-anchor" {...bind()} />
+      <div key="drag-anchor" className="__drag-anchor" {...bind()} />
       <h5>
-        {BricksTypesConfig[brickType].icon({ size: 34 })} {label ?? id}
+        {brickTypesDescriptions[type].icon({ size: 34 })} {label ?? id}
       </h5>
-      <div className="__preview"></div>
     </animated.div>
   );
 };
 
 const Connector = (props: ConnectorProps) => {
-  return <div id={connectorDataGetId(props.data)} className="__item no-drag" />;
+  return (
+    <div id={connectorDataGetDOMId(props.data)} className="__item no-drag" />
+  );
 };
 
 type ConnectorProps = {
@@ -70,5 +75,5 @@ type ConnectorProps = {
 };
 
 export type BrickProps = {
-  brick: BrickData;
+  brick: BrickData<BrickTypes>;
 };
